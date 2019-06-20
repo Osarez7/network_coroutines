@@ -10,11 +10,6 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), MainView {
 
-    companion object {
-        val TAG: String = "MainActivity"
-    }
-
-
     private var presenter: MainPresenter? = null
 
     private var marvelCharactersAdapter: MarvelCharactersAdapter? = null
@@ -24,7 +19,6 @@ class MainActivity : AppCompatActivity(), MainView {
         setContentView(R.layout.activity_main)
 
         presenter = MainPresenter()
-
 
         marvelCharactersAdapter = MarvelCharactersAdapter()
         list_characters.adapter = marvelCharactersAdapter
@@ -46,10 +40,6 @@ class MainActivity : AppCompatActivity(), MainView {
         }
     }
 
-
-    private fun generateRandomId(min: Int, max: Int): Int {
-        return Random().nextInt(max - min + 1) + min
-    }
 
     override fun onStart() {
         super.onStart()

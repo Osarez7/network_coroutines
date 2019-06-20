@@ -10,5 +10,5 @@ interface MarvelApi {
     suspend fun getCharacters(): MarvelResponse
 
     @GET("characters/{characterId}")
-    suspend fun getCharacterById(@Path("characterId") characterId: String): MarvelResponse
+    suspend fun getCharacterById(@Path("characterId") characterId: Long): MarvelResponse
 }
