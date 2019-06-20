@@ -1,27 +1,39 @@
 package com.example.networkcoroutines.network
 
 data class MarvelResponse(
-    var code: String? = null,
-    var status: String? = null,
-    var data: Data? = null
+    val code: String? = null,
+    val status: String? = null,
+    val data: Data? = null
 )
 
 data class Character(
-    var id: Long = 0,
-    var name: String? = null,
-    var description: String? = null,
-    var modified: String? = null,
-    var thumbnail: Thumbnail? = null,
-    var resourceURI: String? = null
+    val id: Long = 0,
+    val name: String? = null,
+    val description: String? = null,
+    val modified: String? = null,
+    val thumbnail: Thumbnail? = null,
+    val resourceURI: String? = null,
+    val comics: ComicsResult? = null
 )
-
 
 data class Data (
-    var results: List<Character>? = null
+    val results: List<Character>? = null
+)
+
+data class ComicsResult(
+    val available : Int,
+    val returned  : Int,
+    val collectionURI: String,
+    val items:  List<Comic>
 )
 
 
+data class Comic(
+    val resourceURI: String,
+    val name: String
+)
+
 data class Thumbnail (
-    var path: String? = null,
-    var extension: String? = null
+    val path: String? = null,
+    val extension: String? = null
 )
