@@ -6,9 +6,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.networkcoroutines.R
 import com.example.networkcoroutines.network.Character
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.*
 
 class MainActivity : AppCompatActivity(), MainView {
@@ -35,7 +32,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
         btn_request_character.setOnClickListener {
 
-                presenter?.fetchCharacteres()
+                presenter?.fetchCharacters()
 
         }
     }
@@ -61,6 +58,6 @@ class MainActivity : AppCompatActivity(), MainView {
 
     override fun onStop() {
         super.onStop()
-        presenter?.dettachView()
+        presenter?.detachView()
     }
 }

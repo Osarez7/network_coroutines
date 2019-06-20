@@ -21,11 +21,11 @@ class MainPresenter{
     }
 
 
-     fun dettachView(){
+     fun detachView(){
         mainView = null
     }
 
-     fun fetchCharacteres() {
+     fun fetchCharacters() {
         val timestamp = Date().time.toString()
         val hash = (timestamp + Constants.PRIVATE_KEY + Constants.PUBLIC_KEY).toMD5()
 
