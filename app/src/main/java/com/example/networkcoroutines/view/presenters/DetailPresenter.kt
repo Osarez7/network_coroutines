@@ -5,8 +5,6 @@ import com.example.networkcoroutines.network.Comic
 import com.example.networkcoroutines.network.MarvelApiFactory
 import com.example.networkcoroutines.network.MarvelResponse
 import com.example.networkcoroutines.view.views.DetailView
-import com.example.networkcoroutines.view.views.MainView
-import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,7 +23,12 @@ class DetailPresenter {
         }
 
         override fun onResponse(call: Call<MarvelResponse<Comic>>, response: Response<MarvelResponse<Comic>>) {
-            detailView?.onComicsResult(response.body()?.data?.results)
+            if(response.isSuccessful){
+              detailView?.onComicsResult(response.body()?.data?.results)
+
+            }else{
+               detailView?.onError( response.errorBody()?.string() ?: "Error")
+            }
         }
 
     }

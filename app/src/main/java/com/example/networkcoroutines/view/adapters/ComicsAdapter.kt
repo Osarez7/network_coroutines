@@ -25,9 +25,7 @@ class ComicsAdapter : RecyclerView.Adapter<ComicViewHolder>() {
     }
 
     override fun getItemCount() = comicsList?.size ?: 0
-
     override fun onBindViewHolder(holder: ComicViewHolder, position: Int) = holder.bind(comicsList?.get(position))
-
 }
 
 
@@ -37,7 +35,7 @@ class ComicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(comic: Comic?) {
         comic?.let {
-            imgComic .loadImage(it.thumbnail.path + "." + it.thumbnail.extension)
+            imgComic.loadImage(it.thumbnail.path + "." + it.thumbnail.extension)
             txtTitle.text = it.title
         }
     }

@@ -20,7 +20,6 @@ class MainPresenter {
         override fun onResponse(call: Call<MarvelResponse<Character>>, response: Response<MarvelResponse<Character>>) {
            mainView?.onFetchCharacters(response.body()?.data?.results)
         }
-
     }
 
     fun fetchCharacters(name: String) {
@@ -34,8 +33,6 @@ class MainPresenter {
     fun cleanUp() {
         mainView = null
     }
-
-
 
 }
 
