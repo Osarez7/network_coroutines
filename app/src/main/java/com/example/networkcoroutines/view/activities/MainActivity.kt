@@ -3,6 +3,7 @@ package com.example.networkcoroutines.view.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.networkcoroutines.R
 import com.example.networkcoroutines.network.Character
@@ -54,6 +55,11 @@ class MainActivity : AppCompatActivity(), MainView {
             charactersAdapter.notifyDataSetChanged()
         }
     }
+
+    override fun showError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

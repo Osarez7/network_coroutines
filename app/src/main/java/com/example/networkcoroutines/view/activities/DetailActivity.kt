@@ -41,15 +41,17 @@ class DetailActivity : AppCompatActivity(), DetailView {
     }
 
 
-    override fun onComicsResult(comics: List<Comic>) {
+    override fun onComicsResult(comics: List<Comic>?) {
         comicsAdapter.comicsList = comics
         comicsAdapter.notifyDataSetChanged()
     }
 
-    override fun onCharacterDetailResult(character: Character) {
-        img_character.loadImage("${character.thumbnail.path}.${character.thumbnail.extension}")
-        txt_name.text = character.name
-        txt_description.text = character.description
+    override fun onCharacterDetailResult(character: Character?) {
+       character?.let {
+           img_character.loadImage("${it.thumbnail.path}.${it.thumbnail.extension}")
+           txt_name.text = it.name
+           txt_description.text = it.description
+       }
     }
 
     override fun onError(message: String) {

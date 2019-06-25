@@ -1,9 +1,15 @@
 package com.example.networkcoroutines.view.presenters
 
+import com.example.networkcoroutines.network.Character
+import com.example.networkcoroutines.network.Comic
 import com.example.networkcoroutines.network.MarvelApiFactory
+import com.example.networkcoroutines.network.MarvelResponse
 import com.example.networkcoroutines.view.views.DetailView
 import com.example.networkcoroutines.view.views.MainView
 import kotlinx.coroutines.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class DetailPresenter {
 
@@ -11,23 +17,39 @@ class DetailPresenter {
        private const val FIRST_RESULT_INDEX = 0
    }
     private var detailView: DetailView? = null
-    private val job = Job()
-    private val scope = CoroutineScope(Dispatchers.Main + job)
 
-    fun fetchCharacterDetail(characterId: Long) = scope.launch {
-        try {
-          supervisorScope{
-                val characterResponse = async { MarvelApiFactory.marvelApi.getCharacterById(characterId) }
-                val comicsResponse = async { MarvelApiFactory.marvelApi.getComicsByCharacterId(characterId) }
 
-                detailView?.onCharacterDetailResult(characterResponse.await().data.results[FIRST_RESULT_INDEX])
-                detailView?.onComicsResult(comicsResponse.await().data.results)
-            }
-
-        } catch (e: Exception) {
-            detailView?.onError(e.message ?: "Error")
+    private val comicsCallback = object : Callback<MarvelResponse<Comic>> {
+        override fun onFailure(call: Call<MarvelResponse<Comic>>, t: Throwable) {
+            detailView?.onError(t.message ?: "Error")
         }
+
+        override fun onResponse(call: Call<MarvelResponse<Comic>>, response: Response<MarvelResponse<Comic>>) {
+            detailView?.onComicsResult(response.body()?.data?.results)
+        }
+
     }
+
+    private val callback = object : Callback<MarvelResponse<Character>> {
+        override fun onFailure(call: Call<MarvelResponse<Character>>, t: Throwable) {
+            detailView?.onError(t.message ?: "Error")
+        }
+
+        override fun onResponse(call: Call<MarvelResponse<Character>>, response: Response<MarvelResponse<Character>>) {
+
+            response.body()?.data?.results?.get(FIRST_RESULT_INDEX)?.let {
+                detailView?.onCharacterDetailResult(it)
+                MarvelApiFactory.marvelApi.getComicsByCharacterId(it.id).enqueue(comicsCallback)
+            }
+        }
+
+    }
+
+
+    fun fetchCharacterDetail(characterId: Long) {
+            MarvelApiFactory.marvelApi.getCharacterById(characterId).enqueue(callback)
+    }
+
 
     fun attachView(view: DetailView) {
         detailView = view
@@ -35,6 +57,5 @@ class DetailPresenter {
 
     fun cleanUp() {
         detailView = null
-        job.cancel()
     }
 }

@@ -1,5 +1,6 @@
 package com.example.networkcoroutines.network
 
+import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -7,14 +8,14 @@ import retrofit2.http.Query
 interface MarvelApi {
 
     @GET("characters")
-    suspend fun getCharacters(): MarvelResponse<Character>
+    fun getCharacters(): Call<MarvelResponse<Character>>
 
     @GET("characters")
-    suspend fun getCharactersByName(@Query("nameStartsWith") name: String): MarvelResponse<Character>
+    fun getCharactersByName(@Query("nameStartsWith") name: String): Call<MarvelResponse<Character>>
 
     @GET("characters/{characterId}")
-    suspend fun getCharacterById(@Path("characterId") characterId: Long): MarvelResponse<Character>
+    fun getCharacterById(@Path("characterId") characterId: Long): Call<MarvelResponse<Character>>
 
     @GET("characters/{characterId}/comics")
-    suspend fun getComicsByCharacterId(@Path("characterId") characterId: Long): MarvelResponse<Comic>
+    fun getComicsByCharacterId(@Path("characterId") characterId: Long): Call<MarvelResponse<Comic>>
 }
