@@ -1,5 +1,6 @@
 package com.example.networkcoroutines.common
 
+import android.widget.ImageView
 import java.security.MessageDigest
 
 fun String.toMD5(): String {
@@ -10,4 +11,11 @@ fun String.toMD5(): String {
 
 fun ByteArray.toHex(): String {
     return joinToString("") { "%02x".format(it) }
+}
+
+
+fun ImageView.loadImage(imageUrl: String){
+    com.squareup.picasso.Picasso.get()
+        .load(imageUrl)
+        .into(this)
 }

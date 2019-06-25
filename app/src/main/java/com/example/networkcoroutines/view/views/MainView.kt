@@ -1,4 +1,4 @@
-package com.example.networkcoroutines.view
+package com.example.networkcoroutines.view.views
 
 import com.example.networkcoroutines.network.Character
 
