@@ -10,7 +10,7 @@ import java.util.*
 
 object MarvelApiFactory {
 
-    private val credentailsInterceptor = Interceptor { chain->
+    private val credentialsInterceptor = Interceptor { chain ->
 
         val timestamp = Date().time.toString()
         val hash = (timestamp + Constants.PRIVATE_KEY + Constants.PUBLIC_KEY).toMD5()
@@ -31,12 +31,12 @@ object MarvelApiFactory {
     }
 
     private val httpClient = OkHttpClient().newBuilder()
-        .addInterceptor(credentailsInterceptor)
+        .addInterceptor(credentialsInterceptor)
         .build()
 
 
 
-    fun retrofit() : Retrofit = Retrofit.Builder()
+    private fun retrofit() : Retrofit = Retrofit.Builder()
         .client(httpClient)
         .baseUrl(Constants.MARVEL_API_URL)
         .addConverterFactory(GsonConverterFactory.create())
