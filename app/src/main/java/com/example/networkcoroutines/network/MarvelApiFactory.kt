@@ -15,16 +15,11 @@ object MarvelApiFactory {
         val timestamp = Date().time.toString()
         val hash = (timestamp + Constants.PRIVATE_KEY + Constants.PUBLIC_KEY).toMD5()
 
-        val newUrl = chain.request().url()
-            .newBuilder()
-            .addQueryParameter("apikey", Constants.PUBLIC_KEY)
-            .addQueryParameter("ts", timestamp)
-            .addQueryParameter("hash", hash)
-            .build()
-
         val newRequest = chain.request()
             .newBuilder()
-            .url(newUrl)
+            .addHeader("Content-type", "application/json")
+            .addHeader("trakt-api-key", "9e29fa5f49ac3a1a8a8bc9fee63726f06dbe5441b2d603f88f4162be0044d09c")
+            .addHeader("trakt-api-version", "2")
             .build()
 
         chain.proceed(newRequest)

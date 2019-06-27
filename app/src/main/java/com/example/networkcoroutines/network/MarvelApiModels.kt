@@ -13,7 +13,7 @@ data class Character(
     val thumbnail: Thumbnail
 )
 
-data class Data<T> (
+data class Data<T>(
     val results: List<T>
 )
 
@@ -24,7 +24,38 @@ data class Comic(
     val thumbnail: Thumbnail
 )
 
-data class Thumbnail (
+data class Thumbnail(
     val path: String,
     val extension: String
 )
+
+data class Movie(
+    val title: String,
+    val year: Int,
+    var ids: Identifiers
+)
+
+data class Show(
+    val title: Int,
+    val year: Int,
+    val ids: Identifiers
+)
+
+data class Identifiers(
+    val trakt: Long,
+    val slug: String,
+    val imdb: String,
+    val tmdb: Int
+)
+
+
+data class AccessToken(
+    var access_token: String? = null,
+    var token_type: String? = null,
+    var expires_in: Int? = null,
+    var refresh_token: String? = null,
+    var scope: String? = null
+)
+
+
+
