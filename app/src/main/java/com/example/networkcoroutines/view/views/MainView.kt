@@ -1,10 +1,8 @@
 package com.example.networkcoroutines.view.views
 
-import com.example.networkcoroutines.network.Character
-import com.uwetrottmann.tmdb2.entities.Images
+import com.example.networkcoroutines.view.models.Movie
 
 interface MainView{
-   fun  onFetchCharacters(characters: List<Character>?)
     fun showError(message: String)
-    fun onFetchShows(images: List<Images?>?)
+    fun onMoviesResult(images: List<Movie>)
 }

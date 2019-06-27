@@ -1,44 +1,36 @@
 package com.example.networkcoroutines.view.presenters
 
-import com.example.networkcoroutines.network.MarvelApiFactory
-import com.example.networkcoroutines.network.Trakt_
+import com.example.networkcoroutines.common.Constants
+import com.example.networkcoroutines.common.getPoster
+import com.example.networkcoroutines.common.toMovie
+import com.example.networkcoroutines.common.toMovieDetail
+import com.example.networkcoroutines.network.managers.TmdbManager
 import com.example.networkcoroutines.view.views.DetailView
-import com.example.networkcoroutines.view.views.MainView
-import com.uwetrottmann.trakt5.TraktV2
-import com.uwetrottmann.trakt5.enums.Extended
 import kotlinx.coroutines.*
 
-class DetailPresenter {
-
-    companion object {
-        private const val FIRST_RESULT_INDEX = 0
-    }
-
+class DetailPresenter(
+    private val tmbd: TmdbManager = TmdbManager(Constants.tmdbAoiKey)
+) {
     private var detailView: DetailView? = null
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Main + job)
 
-    fun fetchCharacterDetail(characterId: Long) = scope.launch {
-        try {
+    fun fetchCharacterDetail(characterId: Int) = scope.launch {
+//        try {
 
-           val showsResponse =  TraktV2(Trakt_.apiKey)
-            .shows().trending(1, null, Extended.FULL).execute()
+            val movie = withContext(Dispatchers.IO) {
+                supervisorScope {
+                    val movieResponse = async { tmbd.api.summary(characterId, Constants.DEFAULT_LANGUAGE) }
+                    val imagesResponse = async { tmbd.api.images(characterId, Constants.DEFAULT_LANGUAGE) }
 
-//            supervisorScope {
-//                val characterResponse = async { MarvelApiFactory.marvelApi.getCharacterById(characterId) }
-//                val comicsResponse = async { MarvelApiFactory.marvelApi.getComicsByCharacterId(characterId) }
-//                detailView?.displayCharacterDetails(
-//                    characterResponse.await().data.results[FIRST_RESULT_INDEX],
-//                    comicsResponse.await().data.results
-//                )
-//
-//            }
+                    movieResponse.await().toMovieDetail(imagesResponse.await().getPoster())
+                }
+            }
+            detailView?.onMovierDetailResult(movie)
 
-            val shows = showsResponse.body()
-
-        } catch (e: Exception) {
-            detailView?.onError(e.message ?: "Error")
-        }
+//        } catch (e: Exception) {
+//            detailView?.onError(e.message ?: e.toString())
+//        }
     }
 
     fun attachView(view: DetailView) {
