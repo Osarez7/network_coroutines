@@ -15,14 +15,17 @@ class MainPresenter {
     private val callback = object : Callback<MarvelResponse<Character>>{
         override fun onFailure(call: Call<MarvelResponse<Character>>, t: Throwable) {
             mainView?.showError(t.message ?: "Error")
+            mainView?.hideProgressBar()
         }
 
         override fun onResponse(call: Call<MarvelResponse<Character>>, response: Response<MarvelResponse<Character>>) {
            mainView?.onFetchCharacters(response.body()?.data?.results)
+            mainView?.hideProgressBar()
         }
     }
 
     fun fetchCharacters(name: String) {
+        mainView?.showProgressBar()
         MarvelApiFactory.marvelApi.getCharactersByName(name).enqueue(callback)
     }
 

@@ -3,6 +3,7 @@ package com.example.networkcoroutines.view.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.networkcoroutines.R
@@ -64,5 +65,13 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun onDestroy() {
         super.onDestroy()
         presenter.cleanUp()
+    }
+
+    override fun showProgressBar() {
+        progress_bar.visibility = View.VISIBLE
+    }
+
+    override fun hideProgressBar() {
+        progress_bar.visibility = View.GONE
     }
 }
