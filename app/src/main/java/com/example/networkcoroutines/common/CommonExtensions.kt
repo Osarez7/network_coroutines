@@ -7,6 +7,8 @@ import com.example.networkcoroutines.network.MarvelResponse
 import com.example.networkcoroutines.view.models.CharacterDetail
 import java.security.MessageDigest
 
+private const val FIRST_RESULT_INDEX = 0
+
 fun String.toMD5(): String {
     // toByteArray: default is Charsets.UTF_8 - https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/to-byte-array.html
     val bytes = MessageDigest.getInstance("MD5").digest(this.toByteArray())
@@ -29,4 +31,4 @@ fun Character.toCharacterDetail(comics: List<Comic>): CharacterDetail {
 }
 
 
-fun MarvelResponse<Character>.getSingleCharacter(): Character = data.results[0]
+fun MarvelResponse<Character>.getSingleCharacter(): Character = data.results[FIRST_RESULT_INDEX]

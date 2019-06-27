@@ -13,55 +13,51 @@ import retrofit2.Response
 
 class DetailPresenter {
 
-    companion object {
-        private const val FIRST_RESULT_INDEX = 0
-    }
-
     private var detailView: DetailView? = null
 
-
     private val callback = object : Callback<MarvelResponse<Character>> {
+
         override fun onFailure(call: Call<MarvelResponse<Character>>, t: Throwable) {
             detailView?.onError(t.message ?: "Error")
         }
 
         override fun onResponse(call: Call<MarvelResponse<Character>>, response: Response<MarvelResponse<Character>>) {
+            if (response.isSuccessful && response.body() != null) {
+                response.body()?.getSingleCharacter()?.let { character ->
 
-            response.body()?.getSingleCharacter()?.let { character ->
+                    MarvelApiFactory.marvelApi.getComicsByCharacterId(character.id)
+                        .enqueue(object : Callback<MarvelResponse<Comic>> {
+                            override fun onFailure(call: Call<MarvelResponse<Comic>>, t: Throwable) {
+                                detailView?.onError(t.message ?: "Error")
+                            }
 
-                 MarvelApiFactory.marvelApi.getComicsByCharacterId(character.id).enqueue(object : Callback<MarvelResponse<Comic>> {
-                     override fun onFailure(call: Call<MarvelResponse<Comic>>, t: Throwable) {
-                         detailView?.onError(t.message ?: "Error")
-                     }
+                            override fun onResponse(call: Call<MarvelResponse<Comic>>, response: Response<MarvelResponse<Comic>>) {
+                                if (response.isSuccessful && response.body() != null) {
 
-                     override fun onResponse(
-                         call: Call<MarvelResponse<Comic>>,
-                         response: Response<MarvelResponse<Comic>>
-                     ) {
-                         if (response.isSuccessful && response.body() != null) {
+                                    response.body()?.let {
+                                        val characerDetail = character.toCharacterDetail(it.data.results)
+                                        detailView?.onCharacterDetailResult(characerDetail)
+                                    }
 
-                             response.body()?.let {
+                                } else {
+                                    detailView?.onError(response.errorBody()?.string() ?: "Error")
+                                }
+                            }
 
-                                 val characerDetail = character.toCharacterDetail(it.data.results)
-                                 detailView?.onCharacterDetailResult(characerDetail)
-                             }
+                        })
 
-                         } else {
-                             detailView?.onError(response.errorBody()?.string() ?: "Error")
-                         }
-                     }
+                }
 
-                 })
-
+            } else {
+                detailView?.onError(response.errorBody()?.string() ?: "Error")
             }
+
         }
     }
-
 
     fun fetchCharacterDetail(characterId: Long) {
         MarvelApiFactory.marvelApi.getCharacterById(characterId).enqueue(callback)
     }
-
 
     fun attachView(view: DetailView) {
         detailView = view
