@@ -12,14 +12,14 @@ class MainPresenter {
 
     private var mainView: MainView? = null
 
-    private val callback = object : Callback<MarvelResponse<Character>>{
+    private val callback = object : Callback<MarvelResponse<Character>> {
         override fun onFailure(call: Call<MarvelResponse<Character>>, t: Throwable) {
             mainView?.showError(t.message ?: "Error")
             mainView?.hideProgressBar()
         }
 
         override fun onResponse(call: Call<MarvelResponse<Character>>, response: Response<MarvelResponse<Character>>) {
-           mainView?.onFetchCharacters(response.body()?.data?.results)
+            mainView?.onFetchCharacters(response.body()?.data?.results)
             mainView?.hideProgressBar()
         }
     }
