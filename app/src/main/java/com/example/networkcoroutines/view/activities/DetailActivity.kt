@@ -5,13 +5,12 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.networkcoroutines.R
 import com.example.networkcoroutines.common.loadImage
-import com.example.networkcoroutines.network.Comic
-import com.example.networkcoroutines.network.Character
 import com.example.networkcoroutines.view.adapters.ComicsAdapter
 import com.example.networkcoroutines.view.presenters.DetailPresenter
 import com.example.networkcoroutines.view.views.DetailView
 import kotlinx.android.synthetic.main.activity_detail.*
 import android.widget.Toast
+import com.example.networkcoroutines.view.models.CharacterDetail
 
 
 class DetailActivity : AppCompatActivity(), DetailView {
@@ -41,17 +40,13 @@ class DetailActivity : AppCompatActivity(), DetailView {
     }
 
 
-    override fun onComicsResult(comics: List<Comic>?) {
-        comicsAdapter.comicsList = comics
-        comicsAdapter.notifyDataSetChanged()
-    }
+    override fun onCharacterDetailResult(character: CharacterDetail) {
+        img_character.loadImage("${character.thumbnail.path}.${character.thumbnail.extension}")
+        txt_name.text = character.name
+        txt_description.text = character.description
 
-    override fun onCharacterDetailResult(character: Character?) {
-       character?.let {
-           img_character.loadImage("${it.thumbnail.path}.${it.thumbnail.extension}")
-           txt_name.text = it.name
-           txt_description.text = it.description
-       }
+        comicsAdapter.comicsList = character.comics
+        comicsAdapter.notifyDataSetChanged()
     }
 
     override fun onError(message: String) {
