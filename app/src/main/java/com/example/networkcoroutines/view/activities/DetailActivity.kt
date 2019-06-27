@@ -12,9 +12,11 @@ import com.example.networkcoroutines.view.presenters.DetailPresenter
 import com.example.networkcoroutines.view.views.DetailView
 import kotlinx.android.synthetic.main.activity_detail.*
 import android.widget.Toast
+import com.example.networkcoroutines.view.models.CharacterDetail
 
 
 class DetailActivity : AppCompatActivity(), DetailView {
+
 
 
     private lateinit var presenter: DetailPresenter
@@ -43,14 +45,11 @@ class DetailActivity : AppCompatActivity(), DetailView {
 
 
     override fun onComicsResult(comics: List<Comic>) {
-        comicsAdapter.comicsList = comics
-        comicsAdapter.notifyDataSetChanged()
+
     }
 
     override fun onCharacterDetailResult(character: Character) {
-        img_character.loadImage("${character.thumbnail.path}.${character.thumbnail.extension}")
-        txt_name.text = character.name
-        txt_description.text = character.description
+
     }
 
     override fun onError(message: String) {
@@ -66,5 +65,15 @@ class DetailActivity : AppCompatActivity(), DetailView {
     override fun displayCharacterDetails(character: Character, comics: List<Comic>) {
         onCharacterDetailResult(character)
         onComicsResult(comics)
+    }
+
+
+    override fun displayCharacterDetails(character: CharacterDetail) {
+        img_character.loadImage("${character.thumbnail.path}.${character.thumbnail.extension}")
+        txt_name.text = character.name
+        txt_description.text = character.description
+
+        comicsAdapter.comicsList = character.comics
+        comicsAdapter.notifyDataSetChanged()
     }
 }

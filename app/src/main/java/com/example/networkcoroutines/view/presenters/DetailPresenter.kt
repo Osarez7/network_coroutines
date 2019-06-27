@@ -1,8 +1,9 @@
 package com.example.networkcoroutines.view.presenters
 
+import com.example.networkcoroutines.common.getSingleCharacter
+import com.example.networkcoroutines.common.toCharacterDetail
 import com.example.networkcoroutines.network.MarvelApiFactory
 import com.example.networkcoroutines.view.views.DetailView
-import com.example.networkcoroutines.view.views.MainView
 import kotlinx.coroutines.*
 
 class DetailPresenter {
@@ -17,15 +18,14 @@ class DetailPresenter {
 
     fun fetchCharacterDetail(characterId: Long) = scope.launch {
         try {
-            supervisorScope {
+            val characterDetail =  supervisorScope {
                 val characterResponse = async { MarvelApiFactory.marvelApi.getCharacterById(characterId) }
                 val comicsResponse = async { MarvelApiFactory.marvelApi.getComicsByCharacterId(characterId) }
-                detailView?.displayCharacterDetails(
-                    characterResponse.await().data.results[FIRST_RESULT_INDEX],
-                    comicsResponse.await().data.results
-                )
-
+                characterResponse.await().getSingleCharacter()
+                    .toCharacterDetail(comicsResponse.await().data.results)
             }
+
+            detailView?.displayCharacterDetails(characterDetail)
 
         } catch (e: Exception) {
             detailView?.onError(e.message ?: "Error")
