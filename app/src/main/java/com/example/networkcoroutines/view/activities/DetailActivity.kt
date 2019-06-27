@@ -16,6 +16,7 @@ import android.widget.Toast
 
 class DetailActivity : AppCompatActivity(), DetailView {
 
+
     private lateinit var presenter: DetailPresenter
     private lateinit var comicsAdapter: ComicsAdapter
 
@@ -59,5 +60,11 @@ class DetailActivity : AppCompatActivity(), DetailView {
     override fun onDestroy() {
         super.onDestroy()
         presenter.cleanUp()
+    }
+
+
+    override fun displayCharacterDetails(character: Character, comics: List<Comic>) {
+        onCharacterDetailResult(character)
+        onComicsResult(comics)
     }
 }

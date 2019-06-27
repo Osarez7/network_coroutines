@@ -7,21 +7,24 @@ import kotlinx.coroutines.*
 
 class DetailPresenter {
 
-   companion object {
-       private const val FIRST_RESULT_INDEX = 0
-   }
+    companion object {
+        private const val FIRST_RESULT_INDEX = 0
+    }
+
     private var detailView: DetailView? = null
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Main + job)
 
     fun fetchCharacterDetail(characterId: Long) = scope.launch {
         try {
-          supervisorScope{
+            supervisorScope {
                 val characterResponse = async { MarvelApiFactory.marvelApi.getCharacterById(characterId) }
                 val comicsResponse = async { MarvelApiFactory.marvelApi.getComicsByCharacterId(characterId) }
+                detailView?.displayCharacterDetails(
+                    characterResponse.await().data.results[FIRST_RESULT_INDEX],
+                    comicsResponse.await().data.results
+                )
 
-                detailView?.onCharacterDetailResult(characterResponse.await().data.results[FIRST_RESULT_INDEX])
-                detailView?.onComicsResult(comicsResponse.await().data.results)
             }
 
         } catch (e: Exception) {
